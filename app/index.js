@@ -29,7 +29,7 @@ clock.ontick = (evt) => {
     hours = util.zeroPad(hours);
   }
   
-  mainClockHours.text = `${hours}`
+  mainClockHours.text = `${hours}`;
   
   if(seconds % 2 === 0) {
     mainClockColon.text = `:`;
@@ -38,8 +38,8 @@ clock.ontick = (evt) => {
     mainClockColon.text = ` `;
   }
   
-  mainClockMinutes.text = `${mins}`
+  mainClockMinutes.text = `${mins}`;
   
-  mainDate.text = `${util.getNiceDate(today)}`
+  mainDate.text = `${util.getNiceDate(today)}`;
   
-}
+};
