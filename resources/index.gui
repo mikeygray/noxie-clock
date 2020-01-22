@@ -1,3 +1,7 @@
-<svg>
-  <rect id="background" />
+<svg class="background">
+  <image href="cat-bg.png" />
+  <text class="mainClock" id="mainClockHours" />
+  <text class="mainClock" id="mainClockColon" />
+  <text class="mainClock" id="mainClockMinutes" />
+  <text id="mainDate" />
 </svg>

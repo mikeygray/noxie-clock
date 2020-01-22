@@ -1,12 +1,36 @@
-.defaultText {
-  font-size: 32;
-  font-family: System-Regular;
-  font-weight: regular;
-  text-length: 32;
+.background {
+  viewport-fill: #484848;
 }
 
-#background {
-  width: 100%;
-  height: 100%;
+.mainClock {
+  font-size: 80;
+  font-family: Seville-Bold;
+  text-length: 6;
+  text-anchor: middle;
   fill: white;
+}
+
+#mainClockHours {
+  x: 30%;
+  y: 20%;
+}
+
+#mainClockColon {
+  x: 50%;
+  y: 17%;
+}
+
+#mainClockMinutes {
+  x: 70%;
+  y: 20%;
+}
+
+#mainDate {
+  font-size: 40;
+  font-family: Seville-Book;
+  text-length: 32;
+  text-anchor: middle;
+  fill: white;
+  x: 50%;
+  y: 94%;
 }
