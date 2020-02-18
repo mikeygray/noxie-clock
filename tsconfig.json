@@ -1,4 +1,0 @@
-{
-  "extends": "./node_modules/@fitbit/sdk/sdk-tsconfig.json",
-  "exclude": ["node_modules", "app", "common"]
-}

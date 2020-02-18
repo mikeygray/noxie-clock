@@ -1,26 +1,21 @@
 function noxieSettings(props) {
   return (
     <Page>
-         <Select
-            label="Theme"
-            settingsKey="theme"
-            options={[
-               {
-                 name: "Green",
-                 value: {
-                   background: "#002200",
-                   foreground: "#00ff00"
-                 }
-               },
-               {
-                 name: "Red",
-                 value: {
-                   background: "#220000",
-                   foreground: "#ff0000"
-                 }
-               }]
-            }
-          />
+      <Section title={<Text bold align="center">Noxie Settings</Text>}>
+        <Toggle
+          settingsKey="showSteps"
+          label="Show Steps"
+        />
+        
+        <Toggle
+          settingsKey="showPulse"
+          label="Show Pulse"
+        />
+        <Toggle
+          settingsKey="showBattery"
+          label="Show Battery"
+        />
+      </Section>
     </Page>
   );
 }
