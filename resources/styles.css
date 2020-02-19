@@ -1,7 +1,7 @@
 #screen {
   width: 100%;
   height: 100%;
-  viewport-fill: "lightblue";
+  viewport-fill: 'lightblue';
 }
 
 #noxie {
@@ -45,31 +45,49 @@
 }
 
 #stats {
-  width: 100%; 
+  width: 100%;
   height: 50;
   x: 0;
   y: 250;
 }
 
+.icon {
+  width: 48;
+  height: 48;
+}
+
+.value {
+  font-size: 10;
+  font-family: Colfax-Regular;
+}
+
 #steps {
   height: 100%;
-  width: 34%; 
+  width: 34%;
 }
-#steps_percent {}
-#steps_icon {}
-#steps_value {}
+#steps_percent {
+}
+#steps_icon {
+}
+#steps_value {
+}
 
 #pulse {
   height: 100%;
   width: 32%;
 }
-#pulse_icon {}
-#pulse_value {}
+#pulse_icon {
+}
+#pulse_value {
+}
 
 #battery {
   height: 100%;
   width: 34%;
 }
-#battery_percent {}
-#battery_icon {}
-#battery_value {}
+#battery_percent {
+}
+#battery_icon {
+}
+#battery_value {
+}

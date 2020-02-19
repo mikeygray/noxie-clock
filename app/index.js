@@ -36,16 +36,17 @@ let _stepsgoal = -1;
 let _stepstxt = '';
 let _pulse = -1;
 let _onwrist = -1;
+let _now, _hours, _seconds, _mins, _batterypct, _charging;
 clock.granularity = 'seconds';
 
 /** main loop */
 clock.ontick = evt => {
-  let _now = evt.date;
-  let _hours = _now.getHours();
-  let _seconds = zeroPad(_now.getSeconds());
-  let _mins = zeroPad(_now.getMinutes());
-  let _batterypct = Math.floor(battery.chargeLevel);
-  let _charging = charger.connected;
+  _now = evt.date;
+  _hours = _now.getHours();
+  _seconds = zeroPad(_now.getSeconds());
+  _mins = zeroPad(_now.getMinutes());
+  _batterypct = Math.floor(battery.chargeLevel);
+  _charging = charger.connected;
 
   /** steps */
   if (today && appbit.permissions.granted('access_activity')) {
