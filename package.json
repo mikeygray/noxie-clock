@@ -1,6 +1,12 @@
 {
+  "name": "noxie-clock",
+  "version": "0.1",
+  "author": "Mikey Gray",
+  "license": "The Unlicense",
+  "description": "A simple fitbit watch face, in honor of my cat Noxie",
+  "repository": "https://github.com/mikeygray/noxie-clock",
   "fitbit": {
-    "appUUID": "c6c21c6b-325b-4e23-8e35-0399806db076",
+    "appUUID": "03c3be38-90a6-4ca4-bf5b-f9277036c943",
     "appType": "clockface",
     "appDisplayName": "noxie-clock",
     "iconFile": "resources/icon.png",
@@ -23,7 +29,7 @@
     "defaultLanguage": "en-US"
   },
   "devDependencies": {
-    "@fitbit/sdk": "~4.0.0",
+    "@fitbit/sdk": "~4.1.0",
     "@fitbit/sdk-cli": "^1.7.1"
   },
   "scripts": {

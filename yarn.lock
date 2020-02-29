@@ -287,10 +287,10 @@
     vorpal "^1.12.0"
     websocket-stream "^5.5.0"
 
-"@fitbit/sdk@~4.0.0":
-  version "4.0.2"
-  resolved "https://registry.yarnpkg.com/@fitbit/sdk/-/sdk-4.0.2.tgz#59b6fe7e5c6e80ef79f21aa4acc1dd88899e2bfa"
-  integrity sha512-6klj211cvsfEYARs9KJ+4ooPDMg9MPhsVdF+KPvMXv36ctmnA+jS4o8ILcMaSZzO+q1dBOJ0o9v7V0s2S74/Ow==
+"@fitbit/sdk@~4.1.0":
+  version "4.1.0"
+  resolved "https://registry.yarnpkg.com/@fitbit/sdk/-/sdk-4.1.0.tgz#695ea2c63c1a9611c4fd82c5d89124be9e9c5864"
+  integrity sha512-cgCqwrLziIqhWcJhfecTRm1fpowpAAsmhXMxRWDIz4W/9ilvliF9f4Z9qnQWF7lGvFAuTlJGcXRyMwUdPOQFCg==
   dependencies:
     "@babel/core" "^7.7.5"
     "@babel/plugin-syntax-dynamic-import" "^7.7.4"

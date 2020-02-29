@@ -4,20 +4,20 @@
   <text class="mainClock" id="mainClockColon" />
   <text class="mainClock" id="mainClockMinutes" />
   <text id="mainDate" />
-  <g id="stats">
-    <g id="steps">
-      <rect id="steps_percent" />
+  <section id="stats">
+    <section id="steps">
+      <!--<rect id="steps_percent" />-->
       <image id="steps_icon" class="icon" href="icons/steps-white.png"/>
       <text id="steps_value" class="value" />
-    </g>
-    <g id="pulse">
+    </section>
+    <section id="pulse">
       <image id="pulse_icon" class="icon" href="icons/pulse-white.png" />
       <text id="pulse_value" class="value" />
-    </g>
-    <g id="battery">
-      <rect id="battery_percent" />
+    </section>
+    <section id="battery">
+      <!--<rect id="battery_percent" />-->
       <image id="battery_icon" class="icon" href="icons/battery-white-0.png" />
       <text id="battery_value" class="value" />
-    </g>
-  </g>
+    </section>
+  </section>
 </svg>

@@ -46,9 +46,9 @@
 
 #stats {
   width: 100%;
-  height: 50;
+  height: 17%;
   x: 0;
-  y: 250;
+  y: 83%;
 }
 
 .icon {
@@ -64,8 +64,14 @@
 #steps {
   height: 100%;
   width: 34%;
+  x: 0;
+  y: 0;
 }
 #steps_percent {
+  height: 100%;
+  width: 0%;
+  x: 0;
+  y: 0;
 }
 #steps_icon {
 }
@@ -75,6 +81,8 @@
 #pulse {
   height: 100%;
   width: 32%;
+  x: 34%;
+  y: 0;
 }
 #pulse_icon {
 }
@@ -84,8 +92,14 @@
 #battery {
   height: 100%;
   width: 34%;
+  x: 66%
+  y: 0;
 }
 #battery_percent {
+  height: 100%;
+  width: 0%;
+  x: 0;
+  y: 0;
 }
 #battery_icon {
 }
