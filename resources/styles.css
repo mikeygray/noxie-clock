@@ -11,37 +11,49 @@
   y: 0;
 }
 
-.mainClock {
-  font-size: 80;
-  font-family: Colfax-Bold;
-  text-length: 10;
+#mainDate {
+  font-size: 30;
+  font-family: Colfax-Regular;
+  text-length: 18;
   text-anchor: middle;
+  fill: #3c3c3c;
+  x: 50%;
+  y: 10%;
+}
+
+.mainClock {
+  font-size: 75;
+  font-family: Colfax-Bold;
+  text-length: 4;
   fill: white;
 }
 
 #mainClockHours {
-  x: 30%;
-  y: 20%;
+  text-anchor: end;
+  x: 49%-10;
+  y: 80%;
 }
 
 #mainClockColon {
-  x: 50%;
-  y: 17%;
+  text-anchor: middle;
+  x: 49%;
+  y: 77%;
 }
 
 #mainClockMinutes {
-  x: 70%;
-  y: 20%;
+  text-anchor: start;
+  x: 49%+10;
+  y: 80%;
 }
 
-#mainDate {
-  font-size: 30;
+#mainClockAmPm {
+  font-size: 20;
   font-family: Colfax-Regular;
-  text-length: 20;
-  text-anchor: middle;
+  text-length: 4;
+  text-anchor: start;
   fill: white;
-  x: 50%;
-  y: 75%;
+  x: 84%;
+  y: 80%;
 }
 
 #stats {
@@ -52,56 +64,41 @@
 }
 
 .icon {
-  height: 48;
+  height: 35;
+  width: 35;
   x: 2;
-  y: 2;
+  y: 10;
 }
 
 .value {
-  font-size: 30;
+  font-size: 25;
   font-family: Colfax-Regular;
   text-anchor: start;
-  fill: white;
-  y: 1;
+  text-length: 8;
+  fill: lightgrey;
+  y: 100%-14;
+  x: 42;
 }
 
 #steps {
   height: 100%;
-  width: 34%;
+  width: 31%;
   x: 0;
   y: 0;
-}
-#steps_icon {
-  width: 35;
-}
-#steps_value {
-  x: 39;
 }
 
 #pulse {
   height: 100%;
-  width: 32%;
-  x: 34%;
+  width: 33%;
+  x: 31%;
   y: 0;
-}
-#pulse_icon {
-  width: 50;
-}
-#pulse_value {
-  x: 54;
 }
 
 #battery {
   height: 100%;
-  width: 34%;
-  x: 66%;
+  width: 36%;
+  x: 64%;
   y: 0;
-}
-#battery_icon {
-  width: 75;
-}
-#battery_value {
-  x: 79;
 }
 
 /*

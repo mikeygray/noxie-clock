@@ -1,17 +1,18 @@
 <svg id="screen">
   <image id="noxie" href="noxies/noxie-blank.png" />
+  <text id="mainDate" />
   <text class="mainClock" id="mainClockHours" />
   <text class="mainClock" id="mainClockColon" />
   <text class="mainClock" id="mainClockMinutes" />
-  <text id="mainDate" />
+  <text id="mainClockAmPm" />
   <section id="stats">
     <section id="steps">
       <!--<rect id="steps_percent" />-->
-      <image id="steps_icon" class="icon" href="icons/png/steps.png"/>
+      <image id="steps_icon" class="icon" href="icons/png/steps-unknown.png"/>
       <text id="steps_value" class="value" />
     </section>
     <section id="pulse">
-      <image id="pulse_icon" class="icon" href="icons/png/heart.png" />
+      <image id="pulse_icon" class="icon" href="icons/png/heart-unknown.png" />
       <text id="pulse_value" class="value" />
     </section>
     <section id="battery">

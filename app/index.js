@@ -19,12 +19,14 @@ clock.granularity = 'seconds';
 const elementClockHours = document.getElementById('mainClockHours');
 const elementClockColon = document.getElementById('mainClockColon');
 const elementClockMinutes = document.getElementById('mainClockMinutes');
+const elementClockAmPm = document.getElementById('mainClockAmPm');
 const elementDate = document.getElementById('mainDate');
+
 const elementStepsIcon = document.getElementById('steps_icon');
-const elementPulseIcon = document.getElementById('pulse_icon');
-const elementBatteryIcon = document.getElementById('battery_icon');
 const elementStepsValue = document.getElementById('steps_value');
+const elementPulseIcon = document.getElementById('pulse_icon');
 const elementPulseValue = document.getElementById('pulse_value');
+const elementBatteryIcon = document.getElementById('battery_icon');
 const elementBatteryValue = document.getElementById('battery_value');
 
 /** default settings */
@@ -36,9 +38,21 @@ let noxieSettings = {
 
 /** settings messaging */
 messaging.peerSocket.onmessage = function(evt) {
-  console.log('peerSocket Message Recieved: ' + JSON.stringify(evt));
   noxieSettings[evt.data.key] = evt.data.value;
-  console.log('noxieSettings: ' + JSON.stringify(noxieSettings));
+  switch (evt.data.key) {
+    case 'showSteps':
+      elementStepsIcon.style.display = noxieSettings.showSteps ? 'inline' : 'none';
+      elementStepsValue.style.display = noxieSettings.showSteps ? 'inline' : 'none';
+      break;
+    case 'showPulse':
+      elementPulseIcon.style.display = noxieSettings.showPulse ? 'inline' : 'none';
+      elementPulseValue.style.display = noxieSettings.showPulse ? 'inline' : 'none';
+      break;
+    case 'showBattery':
+      elementBatteryIcon.style.display = noxieSettings.showBattery ? 'inline' : 'none';
+      elementBatteryValue.style.display = noxieSettings.showBattery ? 'inline' : 'none';
+      break;
+  }
 };
 
 /** heart rate */
@@ -69,10 +83,12 @@ if (BodyPresenceSensor) {
 function updateClock(_now) {
   let _hours = _now.getHours();
   let _mins = zeroPad(_now.getMinutes());
-  let _seconds = zeroPad(_now.getSeconds());
+  let _seconds = _now.getSeconds();
   if (preferences.clockDisplay === '12h') {
+    elementClockAmPm.text = _hours < 12 ? 'AM' : 'PM';
     _hours = _hours % 12 || 12;
   } else {
+    elementClockAmPm.text = '';
     _hours = zeroPad(_hours);
   }
   if (_seconds % 2 === 0) {
@@ -101,7 +117,7 @@ function updateSteps() {
 
 /** heart rate */
 function updatePulse() {
-  if (_onwrist && _pulse > 20 && _pulse < 400) {
+  if (_onwrist && _pulse > 20 && _pulse < 300) {
     elementPulseIcon.href = 'icons/png/heart.png';
     elementPulseValue.text = `${_pulse}`;
   } else {
@@ -112,7 +128,7 @@ function updatePulse() {
 
 /** battery and charging */
 function updateBattery() {
-  if (battery && charger && _onwrist) {
+  if (battery && charger) {
     elementBatteryIcon.href = `icons/png/${getBatteryFilename(
       battery.chargeLevel,
       charger.connected
@@ -127,27 +143,19 @@ function updateBattery() {
 /** main loop */
 clock.ontick = evt => {
   if (display.on) {
-    let _seconds = evt.date.getSeconds();
     updateClock(evt.date);
-
-    if (_seconds === 0) {
-      updateBattery();
-    }
-    if (_seconds % 5 === 0) {
-      updatePulse();
-      //logDebug(evt.date);
-    }
-    if (_seconds % 15 === 0) {
-      updateSteps();
-    }
+    if (noxieSettings.showSteps) updateSteps();
+    if (noxieSettings.showPulse) updatePulse();
+    if (noxieSettings.showBattery) updateBattery();
+    //logDebug(evt.date);
   }
 };
 
 /** debug */
 function logDebug(now) {
   console.log(
-    `Time~ ${zeroPad(now.date.getHours())}:${zeroPad(now.date.getMinutes())}` +
-      `:${zeroPad(now.date.getSeconds())} | Date~ ${getNiceDate(_now)}` +
+    `Time~ ${zeroPad(now.getHours())}:${zeroPad(now.getMinutes())}` +
+      `:${zeroPad(now.getSeconds())} | Date~ ${getNiceDate(now)}` +
       ` | Steps/Goal~ ${today.adjusted.steps}/${goals.steps}` +
       ` | Battery~ ${Math.floor(battery.chargeLevel)}% | Charging~ ${charger.connected}` +
       ` | Pulse~ ${_pulse} | OnWrist~ ${_onwrist}`
