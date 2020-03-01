@@ -8,13 +8,24 @@ import { today, goals } from 'user-activity';
 import { battery, charger } from 'power';
 import { HeartRateSensor } from 'heart-rate';
 import { BodyPresenceSensor } from 'body-presence';
-import { zeroPad, getNiceDate } from './utils';
+import { zeroPad, getNiceDate, getBatteryFilename } from './utils';
+
+/** initial values */
+let _pulse = -1;
+let _onwrist = false;
+clock.granularity = 'seconds';
 
 /** element handles */
-const mainClockHours = document.getElementById('mainClockHours');
-const mainClockColon = document.getElementById('mainClockColon');
-const mainClockMinutes = document.getElementById('mainClockMinutes');
-const mainDate = document.getElementById('mainDate');
+const elementClockHours = document.getElementById('mainClockHours');
+const elementClockColon = document.getElementById('mainClockColon');
+const elementClockMinutes = document.getElementById('mainClockMinutes');
+const elementDate = document.getElementById('mainDate');
+const elementStepsIcon = document.getElementById('steps_icon');
+const elementPulseIcon = document.getElementById('pulse_icon');
+const elementBatteryIcon = document.getElementById('battery_icon');
+const elementStepsValue = document.getElementById('steps_value');
+const elementPulseValue = document.getElementById('pulse_value');
+const elementBatteryValue = document.getElementById('battery_value');
 
 /** default settings */
 let noxieSettings = {
@@ -30,91 +41,115 @@ messaging.peerSocket.onmessage = function(evt) {
   console.log('noxieSettings: ' + JSON.stringify(noxieSettings));
 };
 
-/** initial values */
-let _steps = -1;
-let _stepsgoal = -1;
-let _stepstxt = '';
-let _pulse = -1;
-let _onwrist = -1;
-let _now, _hours, _seconds, _mins, _batterypct, _charging;
-clock.granularity = 'seconds';
+/** heart rate */
+if (HeartRateSensor && appbit.permissions.granted('access_heart_rate')) {
+  const _hrm = new HeartRateSensor();
+  _hrm.addEventListener('reading', () => {
+    _pulse = _hrm.heartRate;
+  });
+  display.addEventListener('change', () => {
+    display.on ? _hrm.start() : _hrm.stop(); // Stop sensor on screen off to conserve battery
+  });
+  _hrm.start();
+}
 
-/** main loop */
-clock.ontick = evt => {
-  _now = evt.date;
-  _hours = _now.getHours();
-  _seconds = zeroPad(_now.getSeconds());
-  _mins = zeroPad(_now.getMinutes());
-  _batterypct = Math.floor(battery.chargeLevel);
-  _charging = charger.connected;
+/** body presence */
+if (BodyPresenceSensor) {
+  const _bodyPresence = new BodyPresenceSensor();
+  _bodyPresence.addEventListener('reading', () => {
+    _onwrist = _bodyPresence.present;
+  });
+  display.addEventListener('change', () => {
+    display.on ? _bodyPresence.start() : _bodyPresence.stop(); // Stop sensor on screen off to conserve battery
+  });
+  _bodyPresence.start();
+}
 
-  /** steps */
-  if (today && appbit.permissions.granted('access_activity')) {
-    if (today.adjusted) _steps = today.adjusted.steps;
-    if (goals) _stepsgoal = goals.steps;
-    _stepstxt = '' + Math.floor(_steps / 1000) + 'k';
-  }
-
-  /** heart rate */
-  if (HeartRateSensor && appbit.permissions.granted('access_heart_rate')) {
-    const _hrm = new HeartRateSensor();
-    _hrm.addEventListener('reading', () => {
-      _pulse = _hrm.heartRate;
-    });
-    display.addEventListener('change', () => {
-      display.on ? _hrm.start() : _hrm.stop(); // Stop sensor on screen off to conserve battery
-    });
-    _hrm.start();
-  }
-
-  /** body presence */
-  if (BodyPresenceSensor) {
-    const _bodyPresence = new BodyPresenceSensor();
-    _bodyPresence.addEventListener('reading', () => {
-      _bodyPresence.present ? (_onwrist = 1) : (_onwrist = 0);
-    });
-    display.addEventListener('change', () => {
-      display.on ? _bodyPresence.start() : _bodyPresence.stop(); // Stop sensor on screen off to conserve battery
-    });
-    _bodyPresence.start();
-  }
-
-  /** time and date */
+/** time and date */
+function updateClock(_now) {
+  let _hours = _now.getHours();
+  let _mins = zeroPad(_now.getMinutes());
+  let _seconds = zeroPad(_now.getSeconds());
   if (preferences.clockDisplay === '12h') {
     _hours = _hours % 12 || 12;
   } else {
     _hours = zeroPad(_hours);
   }
   if (_seconds % 2 === 0) {
-    mainClockColon.text = `:`;
+    elementClockColon.text = `:`;
   } else {
-    mainClockColon.text = ` `;
+    elementClockColon.text = ` `;
   }
-  mainClockHours.text = `${_hours}`;
-  mainClockMinutes.text = `${_mins}`;
-  mainDate.text = `${getNiceDate(_now)}`;
+  elementClockHours.text = `${_hours}`;
+  elementClockMinutes.text = `${_mins}`;
+  elementDate.text = `${getNiceDate(_now)}`;
+}
 
-  /** DEBUG */
-  console.log(
-    'Time~ ' +
-      _hours +
-      ':' +
-      _mins +
-      ' | Date~ ' +
-      getNiceDate(_now) +
-      ' | Steps/Goal~ ' +
-      _steps +
-      '/' +
-      _stepsgoal +
-      ' - Text~ ' +
-      _stepstxt +
-      ' | Battery~ ' +
-      _batterypct +
-      '% - Charging~ ' +
-      _charging +
-      ' | Pulse~ ' +
-      _pulse +
-      ' - OnWrist~ ' +
-      _onwrist
-  );
+/** steps */
+function updateSteps() {
+  if (today && appbit.permissions.granted('access_activity')) {
+    //if (goals) _stepsgoal = goals.steps;
+    if (today.adjusted) {
+      elementStepsIcon.href = 'icons/png/steps.png';
+      elementStepsValue.text = `${Math.floor(today.adjusted.steps / 1000)}k`;
+    }
+  } else {
+    elementStepsIcon.href = 'icons/png/steps-unknown.png';
+    elementStepsValue.text = '';
+  }
+}
+
+/** heart rate */
+function updatePulse() {
+  if (_onwrist && _pulse > 20 && _pulse < 400) {
+    elementPulseIcon.href = 'icons/png/heart.png';
+    elementPulseValue.text = `${_pulse}`;
+  } else {
+    elementPulseIcon.href = 'icons/png/heart-unknown.png';
+    elementPulseValue.text = '';
+  }
+}
+
+/** battery and charging */
+function updateBattery() {
+  if (battery && charger && _onwrist) {
+    elementBatteryIcon.href = `icons/png/${getBatteryFilename(
+      battery.chargeLevel,
+      charger.connected
+    )}`;
+    elementBatteryValue.text = `${Math.floor(battery.chargeLevel)}%`;
+  } else {
+    elementBatteryIcon.href = 'icons/png/battery-unknown.png';
+    elementBatteryValue.text = '';
+  }
+}
+
+/** main loop */
+clock.ontick = evt => {
+  if (display.on) {
+    let _seconds = evt.date.getSeconds();
+    updateClock(evt.date);
+
+    if (_seconds === 0) {
+      updateBattery();
+    }
+    if (_seconds % 5 === 0) {
+      updatePulse();
+      //logDebug(evt.date);
+    }
+    if (_seconds % 15 === 0) {
+      updateSteps();
+    }
+  }
 };
+
+/** debug */
+function logDebug(now) {
+  console.log(
+    `Time~ ${zeroPad(now.date.getHours())}:${zeroPad(now.date.getMinutes())}` +
+      `:${zeroPad(now.date.getSeconds())} | Date~ ${getNiceDate(_now)}` +
+      ` | Steps/Goal~ ${today.adjusted.steps}/${goals.steps}` +
+      ` | Battery~ ${Math.floor(battery.chargeLevel)}% | Charging~ ${charger.connected}` +
+      ` | Pulse~ ${_pulse} | OnWrist~ ${_onwrist}`
+  );
+}

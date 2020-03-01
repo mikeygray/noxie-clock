@@ -7,16 +7,16 @@
   <section id="stats">
     <section id="steps">
       <!--<rect id="steps_percent" />-->
-      <image id="steps_icon" class="icon" href="icons/steps-white.png"/>
+      <image id="steps_icon" class="icon" href="icons/png/steps.png"/>
       <text id="steps_value" class="value" />
     </section>
     <section id="pulse">
-      <image id="pulse_icon" class="icon" href="icons/pulse-white.png" />
+      <image id="pulse_icon" class="icon" href="icons/png/heart.png" />
       <text id="pulse_value" class="value" />
     </section>
     <section id="battery">
       <!--<rect id="battery_percent" />-->
-      <image id="battery_icon" class="icon" href="icons/battery-white-0.png" />
+      <image id="battery_icon" class="icon" href="icons/png/battery-unknown.png" />
       <text id="battery_value" class="value" />
     </section>
   </section>
