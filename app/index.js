@@ -8,14 +8,21 @@ import { today, goals } from 'user-activity';
 import { battery, charger } from 'power';
 import { HeartRateSensor } from 'heart-rate';
 import { BodyPresenceSensor } from 'body-presence';
-import { zeroPad, getNiceDate, getBatteryFilename } from './utils';
+import { zeroPad, getNiceDate, getBatteryFilename, getRndInt } from './utils';
+import { noxieFrames } from './constants';
 
 /** initial values */
 let _pulse = -1;
 let _onwrist = false;
+let _noxieCounter = {
+  tillNext: -1,
+  animationDuration: 0,
+};
 clock.granularity = 'seconds';
 
 /** element handles */
+const elementNoxie = document.getElementById('noxie');
+
 const elementClockHours = document.getElementById('mainClockHours');
 const elementClockColon = document.getElementById('mainClockColon');
 const elementClockMinutes = document.getElementById('mainClockMinutes');
@@ -30,27 +37,33 @@ const elementBatteryIcon = document.getElementById('battery_icon');
 const elementBatteryValue = document.getElementById('battery_value');
 
 /** default settings */
-let noxieSettings = {
+let _noxieSettings = {
   showSteps: true,
   showPulse: true,
   showBattery: true,
+  showAnimations: true,
 };
 
 /** settings messaging */
 messaging.peerSocket.onmessage = function(evt) {
-  noxieSettings[evt.data.key] = evt.data.value;
+  _noxieSettings[evt.data.key] = evt.data.value;
   switch (evt.data.key) {
     case 'showSteps':
-      elementStepsIcon.style.display = noxieSettings.showSteps ? 'inline' : 'none';
-      elementStepsValue.style.display = noxieSettings.showSteps ? 'inline' : 'none';
+      elementStepsIcon.style.display = _noxieSettings.showSteps ? 'inline' : 'none';
+      elementStepsValue.style.display = _noxieSettings.showSteps ? 'inline' : 'none';
       break;
     case 'showPulse':
-      elementPulseIcon.style.display = noxieSettings.showPulse ? 'inline' : 'none';
-      elementPulseValue.style.display = noxieSettings.showPulse ? 'inline' : 'none';
+      elementPulseIcon.style.display = _noxieSettings.showPulse ? 'inline' : 'none';
+      elementPulseValue.style.display = _noxieSettings.showPulse ? 'inline' : 'none';
       break;
     case 'showBattery':
-      elementBatteryIcon.style.display = noxieSettings.showBattery ? 'inline' : 'none';
-      elementBatteryValue.style.display = noxieSettings.showBattery ? 'inline' : 'none';
+      elementBatteryIcon.style.display = _noxieSettings.showBattery ? 'inline' : 'none';
+      elementBatteryValue.style.display = _noxieSettings.showBattery ? 'inline' : 'none';
+      break;
+    case 'showAnimations':
+      elementNoxie.href = 'noxies/noxie-blank.png';
+      _noxieCounter.tillNext = -1;
+      _noxieCounter.animationDuration = 0;
       break;
   }
 };
@@ -140,14 +153,36 @@ function updateBattery() {
   }
 }
 
+/** noxie animations */
+function updateAnimations() {
+  if (_noxieCounter.tillNext > 0) {
+    _noxieCounter.tillNext -= 1;
+  } else if (_noxieCounter.tillNext === 0) {
+    let _frame = noxieFrames[Math.floor(Math.random() * noxieFrames.length)];
+    elementNoxie.href = 'noxies/noxie-' + _frame.name + '.png';
+    _noxieCounter.animationDuration = _frame.duration;
+    _noxieCounter.tillNext = -1;
+  } else if (_noxieCounter.tillNext < 0) {
+    if (_noxieCounter.animationDuration > 0) {
+      _noxieCounter.animationDuration -= 1;
+    } else {
+      elementNoxie.href = 'noxies/noxie-blank.png';
+      _noxieCounter.tillNext = getRndInt(3, 9);
+    }
+  }
+}
+
 /** main loop */
 clock.ontick = evt => {
   if (display.on) {
     updateClock(evt.date);
-    if (noxieSettings.showSteps) updateSteps();
-    if (noxieSettings.showPulse) updatePulse();
-    if (noxieSettings.showBattery) updateBattery();
-    //logDebug(evt.date);
+    if (_noxieSettings.showPulse) updatePulse();
+    if (_noxieSettings.showAnimations) updateAnimations();
+    if (evt.date.getSeconds() % 5 === 0) {
+      if (_noxieSettings.showSteps) updateSteps();
+      if (_noxieSettings.showBattery) updateBattery();
+      //logDebug(evt.date);
+    }
   }
 };
 

@@ -1,0 +1,18 @@
+export const noxieFrames = [
+  { name: 'blink', duration: 1 },
+  { name: 'bigeyes', duration: 4 },
+  { name: 'food', duration: 4 },
+  { name: 'indark', duration: 4 },
+  { name: 'blink', duration: 1 },
+  { name: 'lookdown', duration: 2 },
+  { name: 'lookleft', duration: 2 },
+  { name: 'lookright', duration: 2 },
+  { name: 'blink', duration: 1 },
+  { name: 'lookup', duration: 2 },
+  { name: 'mouth', duration: 4 },
+  { name: 'panic', duration: 4 },
+  { name: 'blink', duration: 1 },
+  { name: 'tongue', duration: 4 },
+  { name: 'litter', duration: 4 },
+  { name: 'bow', duration: 5 },
+];
