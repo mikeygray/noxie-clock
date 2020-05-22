@@ -1,5 +1,6 @@
 import clock from 'clock';
 import document from 'document';
+import * as fs from "fs";
 import * as messaging from 'messaging';
 import { display } from 'display';
 import { me as appbit } from 'appbit';
@@ -36,17 +37,21 @@ const elementPulseValue = document.getElementById('pulse_value');
 const elementBatteryIcon = document.getElementById('battery_icon');
 const elementBatteryValue = document.getElementById('battery_value');
 
-/** default settings */
+/** inital settings */
 let _noxieSettings = {
   showSteps: true,
   showPulse: true,
   showBattery: true,
   showAnimations: true,
 };
+if (fs.existsSync("/private/data/noxie-settings.txt")) {
+  _noxieSettings = fs.readFileSync("noxie-settings.txt", "json");
+}
+
 
 /** settings messaging */
 messaging.peerSocket.onmessage = function(evt) {
-  _noxieSettings[evt.data.key] = evt.data.value;
+  updateNoxieSettings(evt.data.key, evt.data.value)
   switch (evt.data.key) {
     case 'showSteps':
       elementStepsIcon.style.display = _noxieSettings.showSteps ? 'inline' : 'none';
@@ -170,6 +175,12 @@ function updateAnimations() {
       _noxieCounter.tillNext = getRndInt(3, 9);
     }
   }
+}
+
+/** update settings */
+function updateNoxieSettings(_key, _value) {
+  _noxieSettings[_key] = _value;
+  fs.writeFileSync("noxie-settings.txt", _noxieSettings, "json");
 }
 
 /** main loop */
