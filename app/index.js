@@ -1,16 +1,23 @@
 import clock from 'clock';
 import document from 'document';
+import analytics from "fitbit-google-analytics/app"
 import * as fs from "fs";
 import * as messaging from 'messaging';
 import { display } from 'display';
 import { me as appbit } from 'appbit';
-import { preferences } from 'user-settings';
+import { preferences, locale } from 'user-settings';
 import { today, goals } from 'user-activity';
 import { battery, charger } from 'power';
 import { HeartRateSensor } from 'heart-rate';
 import { BodyPresenceSensor } from 'body-presence';
 import { zeroPad, getNiceDate, getBatteryFilename, getRndInt } from './utils';
 import { noxieFrames } from './constants';
+
+/** analytics */
+analytics.configure({
+  tracking_id: "UA-167462733-1",
+  user_language: locale.language
+})
 
 /** initial values */
 let _pulse = -1;

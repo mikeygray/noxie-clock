@@ -12,6 +12,7 @@
     "iconFile": "resources/icon.png",
     "wipeColor": "",
     "requestedPermissions": [
+      "access_internet",
       "run_background",
       "access_activity",
       "access_heart_rate"
@@ -34,5 +35,8 @@
   },
   "scripts": {
     "build": "fitbit-build"
+  },
+  "dependencies": {
+    "fitbit-google-analytics": "^1.2.0"
   }
 }
