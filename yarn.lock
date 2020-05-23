@@ -294,7 +294,7 @@
     error-subclass "^2.2.0"
     tslib "^1.11.1"
 
-"@fitbit/sdk-cli@^1.7.1":
+"@fitbit/sdk-cli@^1.5.0", "@fitbit/sdk-cli@^1.7.1":
   version "1.7.1"
   resolved "https://registry.yarnpkg.com/@fitbit/sdk-cli/-/sdk-cli-1.7.1.tgz#50b46acb78b00ca5b0aa998f5eb76615afa9e1ad"
   integrity sha512-fp5EmfbGzpBnAev2kO1HaGvsVKD5jdlfdn9npzqQ/Qi1yAseyMiAbvW7mySkjKZhl+4WZXa/mOWKgVSOsW1ojQ==
@@ -1195,6 +1195,13 @@ find-up@^4.1.0:
   dependencies:
     locate-path "^5.0.0"
     path-exists "^4.0.0"
+
+fitbit-google-analytics@^1.2.0:
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/fitbit-google-analytics/-/fitbit-google-analytics-1.2.0.tgz#15b8fcc8fc9e7bde090ce1d1864a2e1bf4697521"
+  integrity sha512-gZo15C2cK08K/gzAPYO0+R8QsPJTJU/FS9Je0uNVoQvyzo42rOLb3Ko7H0Um3qnS8JFOhrBvHk1ITsLc3ogL/w==
+  dependencies:
+    "@fitbit/sdk-cli" "^1.5.0"
 
 flush-write-stream@^1.0.2:
   version "1.1.1"

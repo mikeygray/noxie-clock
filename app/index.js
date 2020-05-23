@@ -1,15 +1,23 @@
 import clock from 'clock';
 import document from 'document';
+import analytics from "fitbit-google-analytics/app"
+import * as fs from "fs";
 import * as messaging from 'messaging';
 import { display } from 'display';
 import { me as appbit } from 'appbit';
-import { preferences } from 'user-settings';
+import { preferences, locale } from 'user-settings';
 import { today, goals } from 'user-activity';
 import { battery, charger } from 'power';
 import { HeartRateSensor } from 'heart-rate';
 import { BodyPresenceSensor } from 'body-presence';
 import { zeroPad, getNiceDate, getBatteryFilename, getRndInt } from './utils';
 import { noxieFrames } from './constants';
+
+/** analytics */
+analytics.configure({
+  tracking_id: "UA-167462733-1",
+  user_language: locale.language
+})
 
 /** initial values */
 let _pulse = -1;
@@ -36,17 +44,21 @@ const elementPulseValue = document.getElementById('pulse_value');
 const elementBatteryIcon = document.getElementById('battery_icon');
 const elementBatteryValue = document.getElementById('battery_value');
 
-/** default settings */
+/** inital settings */
 let _noxieSettings = {
   showSteps: true,
   showPulse: true,
   showBattery: true,
   showAnimations: true,
 };
+if (fs.existsSync("/private/data/noxie-settings.txt")) {
+  _noxieSettings = fs.readFileSync("noxie-settings.txt", "json");
+}
+
 
 /** settings messaging */
 messaging.peerSocket.onmessage = function(evt) {
-  _noxieSettings[evt.data.key] = evt.data.value;
+  updateNoxieSettings(evt.data.key, evt.data.value)
   switch (evt.data.key) {
     case 'showSteps':
       elementStepsIcon.style.display = _noxieSettings.showSteps ? 'inline' : 'none';
@@ -170,6 +182,12 @@ function updateAnimations() {
       _noxieCounter.tillNext = getRndInt(3, 9);
     }
   }
+}
+
+/** update settings */
+function updateNoxieSettings(_key, _value) {
+  _noxieSettings[_key] = _value;
+  fs.writeFileSync("noxie-settings.txt", _noxieSettings, "json");
 }
 
 /** main loop */
