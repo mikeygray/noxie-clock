@@ -1,0 +1,22 @@
+/** only include english speaking countries? */
+export const countrycodes = [
+  { id: 0, code: 'ag', name: 'Antigua and Barbuda' },
+  { id: 0, code: 'au', name: 'Australia' },
+  { id: 0, code: 'bs', name: 'The Bahamas' },
+  { id: 0, code: 'bb', name: ' Barbados' },
+  { id: 0, code: 'bz', name: ' Belize' },
+  { id: 0, code: 'ca', name: ' Canada' },
+  { id: 0, code: 'dm', name: ' Dominica' },
+  { id: 0, code: 'gd', name: ' Grenada' },
+  { id: 0, code: 'gy', name: ' Guyana' },
+  { id: 0, code: 'ie', name: ' Ireland' },
+  { id: 0, code: 'je', name: ' Jersey' },
+  { id: 0, code: 'jm', name: ' Jamaica' },
+  { id: 0, code: 'nz', name: ' New Zealand' },
+  { id: 0, code: 'kn', name: ' St Kitts and Nevis' },
+  { id: 0, code: 'lc', name: ' St Lucia' },
+  { id: 0, code: 'vc', name: ' St Vincent and the Grenadines' },
+  { id: 0, code: 'tt', name: ' Trinidad and Tobago' },
+  { id: 2635167, code: 'gb', name: 'Great Britain (United Kingdom)' },
+  { id: 6252001, code: 'us', name: 'United States (of America)' },
+];
