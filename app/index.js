@@ -1,7 +1,7 @@
 import clock from 'clock';
 import document from 'document';
-import analytics from "fitbit-google-analytics/app"
-import * as fs from "fs";
+import analytics from 'fitbit-google-analytics/app';
+import * as fs from 'fs';
 import * as messaging from 'messaging';
 import { display } from 'display';
 import { me as appbit } from 'appbit';
@@ -15,9 +15,9 @@ import { noxieFrames } from './constants';
 
 /** analytics */
 analytics.configure({
-  tracking_id: "UA-167462733-1",
-  user_language: locale.language
-})
+  tracking_id: 'UA-167462733-1',
+  user_language: locale.language,
+});
 
 /** initial values */
 let _pulse = -1;
@@ -50,15 +50,18 @@ let _noxieSettings = {
   showPulse: true,
   showBattery: true,
   showAnimations: true,
+  showWeather: false,
+  weatherUnitsC: false,
+  weatherTemp: undefined,
+  weatherCode: '',
 };
-if (fs.existsSync("/private/data/noxie-settings.txt")) {
-  _noxieSettings = fs.readFileSync("noxie-settings.txt", "json");
+if (fs.existsSync('/private/data/noxie-settings.txt')) {
+  _noxieSettings = fs.readFileSync('noxie-settings.txt', 'json');
 }
 
-
 /** settings messaging */
-messaging.peerSocket.onmessage = function(evt) {
-  updateNoxieSettings(evt.data.key, evt.data.value)
+messaging.peerSocket.onmessage = function (evt) {
+  updateNoxieSettings(evt.data.key, evt.data.value);
   switch (evt.data.key) {
     case 'showSteps':
       elementStepsIcon.style.display = _noxieSettings.showSteps ? 'inline' : 'none';
@@ -77,6 +80,17 @@ messaging.peerSocket.onmessage = function(evt) {
       _noxieCounter.tillNext = -1;
       _noxieCounter.animationDuration = 0;
       break;
+    /* TODO: Device-side display of weather!
+    case 'showWeather':
+    case 'weatherUnitsC':
+    case 'weatherTemp':
+    case 'weatherCode':
+      console.log(
+        `Got something weather related from the companion!\nshowWeather: ${_noxieSettings.showWeather} | ` +
+          `weatherUnitsC: ${_noxieSettings.weatherUnitsC} | weatherTemp: ${_noxieSettings.weatherTemp} | weatherCode: ${_noxieSettings.weatherCode}`
+      );
+      break;
+    */
   }
 };
 
@@ -131,11 +145,11 @@ function updateSteps() {
   if (today && appbit.permissions.granted('access_activity')) {
     //if (goals) _stepsgoal = goals.steps;
     if (today.adjusted) {
-      elementStepsIcon.href = 'icons/png/steps.png';
+      elementStepsIcon.href = 'icons-fitbit/steps.png';
       elementStepsValue.text = `${Math.floor(today.adjusted.steps / 1000)}k`;
     }
   } else {
-    elementStepsIcon.href = 'icons/png/steps-unknown.png';
+    elementStepsIcon.href = 'icons-fitbit/steps-unknown.png';
     elementStepsValue.text = '';
   }
 }
@@ -143,10 +157,10 @@ function updateSteps() {
 /** heart rate */
 function updatePulse() {
   if (_onwrist && _pulse > 20 && _pulse < 300) {
-    elementPulseIcon.href = 'icons/png/heart.png';
+    elementPulseIcon.href = 'icons-fitbit/heart.png';
     elementPulseValue.text = `${_pulse}`;
   } else {
-    elementPulseIcon.href = 'icons/png/heart-unknown.png';
+    elementPulseIcon.href = 'icons-fitbit/heart-unknown.png';
     elementPulseValue.text = '';
   }
 }
@@ -154,13 +168,13 @@ function updatePulse() {
 /** battery and charging */
 function updateBattery() {
   if (battery && charger) {
-    elementBatteryIcon.href = `icons/png/${getBatteryFilename(
+    elementBatteryIcon.href = `icons-fitbit/${getBatteryFilename(
       battery.chargeLevel,
       charger.connected
     )}`;
     elementBatteryValue.text = `${Math.floor(battery.chargeLevel)}%`;
   } else {
-    elementBatteryIcon.href = 'icons/png/battery-unknown.png';
+    elementBatteryIcon.href = 'icons-fitbit/battery-unknown.png';
     elementBatteryValue.text = '';
   }
 }
@@ -187,11 +201,11 @@ function updateAnimations() {
 /** update settings */
 function updateNoxieSettings(_key, _value) {
   _noxieSettings[_key] = _value;
-  fs.writeFileSync("noxie-settings.txt", _noxieSettings, "json");
+  fs.writeFileSync('noxie-settings.txt', _noxieSettings, 'json');
 }
 
 /** main loop */
-clock.ontick = evt => {
+clock.ontick = (evt) => {
   if (display.on) {
     updateClock(evt.date);
     if (_noxieSettings.showPulse) updatePulse();

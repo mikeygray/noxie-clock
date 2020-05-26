@@ -8,16 +8,16 @@
   <section id="stats">
     <section id="steps">
       <!--<rect id="steps_percent" />-->
-      <image id="steps_icon" class="icon" href="icons/png/steps-unknown.png"/>
+      <image id="steps_icon" class="icon" href="icons-fitbit/steps-unknown.png"/>
       <text id="steps_value" class="value" />
     </section>
     <section id="pulse">
-      <image id="pulse_icon" class="icon" href="icons/png/heart-unknown.png" />
+      <image id="pulse_icon" class="icon" href="icons-fitbit/heart-unknown.png" />
       <text id="pulse_value" class="value" />
     </section>
     <section id="battery">
       <!--<rect id="battery_percent" />-->
-      <image id="battery_icon" class="icon" href="icons/png/battery-unknown.png" />
+      <image id="battery_icon" class="icon" href="icons-fitbit/battery-unknown.png" />
       <text id="battery_value" class="value" />
     </section>
   </section>
