@@ -1,2 +1,6 @@
+# storage directories
 node_modules
 build
+
+# private keys
+keys.js
