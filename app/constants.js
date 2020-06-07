@@ -16,3 +16,24 @@ export const noxieFrames = [
   { name: 'litter', duration: 4 },
   { name: 'bow', duration: 5 },
 ];
+
+export const weatherFrames = [
+  { code: '01d', overlay: false },
+  { code: '01n', overlay: false },
+  { code: '02d', overlay: false },
+  { code: '02n', overlay: false },
+  { code: '03d', overlay: false },
+  { code: '03n', overlay: false },
+  { code: '04d', overlay: false },
+  { code: '04n', overlay: false },
+  { code: '09d', overlay: true },
+  { code: '09n', overlay: true },
+  { code: '10d', overlay: true },
+  { code: '10n', overlay: true },
+  { code: '11d', overlay: false },
+  { code: '11n', overlay: false },
+  { code: '13d', overlay: true },
+  { code: '13n', overlay: true },
+  { code: '50d', overlay: true },
+  { code: '50n', overlay: true },
+];

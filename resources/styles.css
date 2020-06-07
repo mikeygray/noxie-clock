@@ -1,24 +1,45 @@
+/* NOTE TO SELF: Fitbit doesn't understand listed css properties
+ * i.e. #id1, #id2 { ... }
+ */
+
 #screen {
   width: 100%;
   height: 100%;
-  viewport-fill: lightblue;
 }
 
-#noxie {
+.screenFill {
   width: 100%;
   height: 100%;
   x: 0;
   y: 0;
 }
 
-#mainDate {
+#headerBackground {
+  width: 100%;
+  height: 11%;
+  x: 0;
+  y: 0;
+  fill: white;
+  opacity: 0.6;
+}
+
+.header {
+  font-family: Colfax-Medium;
   font-size: 30;
-  font-family: Colfax-Regular;
-  text-length: 18;
-  text-anchor: middle;
-  fill: #3c3c3c;
-  x: 50%;
+  fill: #333333;
   y: 10%;
+}
+
+#mainDate {
+  text-length: 18;
+  text-anchor: start;
+  x: 1%;
+}
+
+#mainTemp {
+  text-length: 8;
+  text-anchor: end;
+  x: 99%;
 }
 
 .mainClock {

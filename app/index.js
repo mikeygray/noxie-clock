@@ -11,11 +11,14 @@ import { battery, charger } from 'power';
 import { HeartRateSensor } from 'heart-rate';
 import { BodyPresenceSensor } from 'body-presence';
 import { zeroPad, getNiceDate, getBatteryFilename, getRndInt } from './utils';
-import { noxieFrames } from './constants';
+import { noxieFrames, weatherFrames } from './constants';
+import { keys } from './keys';
+
+const DEBUG_OUTPUT = true;
 
 /** analytics */
 analytics.configure({
-  tracking_id: 'UA-167462733-1',
+  tracking_id: keys.g_analytics,
   user_language: locale.language,
 });
 
@@ -29,13 +32,16 @@ let _noxieCounter = {
 clock.granularity = 'seconds';
 
 /** element handles */
+const elementBackground = document.getElementById('background');
 const elementNoxie = document.getElementById('noxie');
+const elementOverlay = document.getElementById('overlay');
 
 const elementClockHours = document.getElementById('mainClockHours');
 const elementClockColon = document.getElementById('mainClockColon');
 const elementClockMinutes = document.getElementById('mainClockMinutes');
 const elementClockAmPm = document.getElementById('mainClockAmPm');
 const elementDate = document.getElementById('mainDate');
+const elementTemp = document.getElementById('mainTemp');
 
 const elementStepsIcon = document.getElementById('steps_icon');
 const elementStepsValue = document.getElementById('steps_value');
@@ -44,24 +50,27 @@ const elementPulseValue = document.getElementById('pulse_value');
 const elementBatteryIcon = document.getElementById('battery_icon');
 const elementBatteryValue = document.getElementById('battery_value');
 
-/** inital settings */
-let _noxieSettings = {
-  showSteps: true,
-  showPulse: true,
-  showBattery: true,
-  showAnimations: true,
-  showWeather: false,
-  weatherUnitsC: false,
-  weatherTemp: undefined,
-  weatherCode: '',
-};
+/** initial settings */
+let _noxieSettings = {};
 if (fs.existsSync('/private/data/noxie-settings.txt')) {
   _noxieSettings = fs.readFileSync('noxie-settings.txt', 'json');
+} else {
+  _noxieSettings = {
+    showSteps: true,
+    showPulse: true,
+    showBattery: true,
+    showAnimations: true,
+    showWeather: false,
+    weatherUnitsC: false,
+    weatherTemp: -1, // impossible kelvin value
+    weatherCode: '',
+  };
 }
 
 /** settings messaging */
 messaging.peerSocket.onmessage = function (evt) {
   updateNoxieSettings(evt.data.key, evt.data.value);
+  logDebugSettings();
   switch (evt.data.key) {
     case 'showSteps':
       elementStepsIcon.style.display = _noxieSettings.showSteps ? 'inline' : 'none';
@@ -80,17 +89,19 @@ messaging.peerSocket.onmessage = function (evt) {
       _noxieCounter.tillNext = -1;
       _noxieCounter.animationDuration = 0;
       break;
-    /* TODO: Device-side display of weather!
     case 'showWeather':
-    case 'weatherUnitsC':
-    case 'weatherTemp':
-    case 'weatherCode':
-      console.log(
-        `Got something weather related from the companion!\nshowWeather: ${_noxieSettings.showWeather} | ` +
-          `weatherUnitsC: ${_noxieSettings.weatherUnitsC} | weatherTemp: ${_noxieSettings.weatherTemp} | weatherCode: ${_noxieSettings.weatherCode}`
-      );
+      updateBackground();
+      updateTemp();
       break;
-    */
+    case 'weatherUnitsC':
+      updateTemp();
+      break;
+    case 'weatherTemp':
+      updateTemp();
+      break;
+    case 'weatherCode':
+      updateBackground();
+      break;
   }
 };
 
@@ -143,7 +154,6 @@ function updateClock(_now) {
 /** steps */
 function updateSteps() {
   if (today && appbit.permissions.granted('access_activity')) {
-    //if (goals) _stepsgoal = goals.steps;
     if (today.adjusted) {
       elementStepsIcon.href = 'icons-fitbit/steps.png';
       elementStepsValue.text = `${Math.floor(today.adjusted.steps / 1000)}k`;
@@ -204,27 +214,73 @@ function updateNoxieSettings(_key, _value) {
   fs.writeFileSync('noxie-settings.txt', _noxieSettings, 'json');
 }
 
+/** update temp reading */
+function updateTemp() {
+  logDebugSettings;
+  if (JSON.parse(_noxieSettings.showWeather) && _noxieSettings.weatherTemp > -1) {
+    if (JSON.parse(_noxieSettings.weatherUnitsC)) {
+      elementTemp.text = Math.round(_noxieSettings.weatherTemp - 273.15) + '°';
+    } else {
+      elementTemp.text = Math.round((_noxieSettings.weatherTemp * 9) / 5 - 459.67) + '°';
+    }
+  } else {
+    elementTemp.text = '';
+  }
+}
+
+/** update background/overlay */
+function updateBackground() {
+  let newBackgroundSet = false;
+  if (JSON.parse(_noxieSettings.showWeather) && _noxieSettings.weatherCode.length > 0) {
+    //TODO: Why can't I get Array.prototype.find() to work here?
+    weatherFrames.forEach((setting) => {
+      if (setting.code === _noxieSettings.weatherCode) {
+        elementBackground.href = 'backgrounds/' + setting.code + '.png';
+        if (setting.overlay) {
+          elementOverlay.href = 'backgrounds/overlay/' + setting.code + '.png';
+        } else {
+          elementOverlay.href = 'backgrounds/overlay/0.png';
+        }
+        newBackgroundSet = true;
+      }
+    });
+  }
+  if (!newBackgroundSet) {
+    elementBackground.href = 'backgrounds/0.png';
+    elementOverlay.href = 'backgrounds/overlay/0.png';
+  }
+}
+
 /** main loop */
 clock.ontick = (evt) => {
   if (display.on) {
     updateClock(evt.date);
-    if (_noxieSettings.showPulse) updatePulse();
-    if (_noxieSettings.showAnimations) updateAnimations();
+    if (JSON.parse(_noxieSettings.showPulse)) updatePulse();
+    if (JSON.parse(_noxieSettings.showAnimations)) updateAnimations();
     if (evt.date.getSeconds() % 5 === 0) {
-      if (_noxieSettings.showSteps) updateSteps();
-      if (_noxieSettings.showBattery) updateBattery();
-      //logDebug(evt.date);
+      if (JSON.parse(_noxieSettings.showSteps)) updateSteps();
+      if (JSON.parse(_noxieSettings.showBattery)) updateBattery();
     }
+    //logDebugInLoop(evt.date);
   }
 };
 
 /** debug */
-function logDebug(now) {
-  console.log(
-    `Time~ ${zeroPad(now.getHours())}:${zeroPad(now.getMinutes())}` +
-      `:${zeroPad(now.getSeconds())} | Date~ ${getNiceDate(now)}` +
-      ` | Steps/Goal~ ${today.adjusted.steps}/${goals.steps}` +
-      ` | Battery~ ${Math.floor(battery.chargeLevel)}% | Charging~ ${charger.connected}` +
-      ` | Pulse~ ${_pulse} | OnWrist~ ${_onwrist}`
-  );
+function logDebug(message) {
+  if (DEBUG_OUTPUT) console.log(message);
+}
+
+function logDebugInLoop(now) {
+  if (DEBUG_OUTPUT)
+    logDebug(
+      `Time~ ${zeroPad(now.getHours())}:${zeroPad(now.getMinutes())}` +
+        `:${zeroPad(now.getSeconds())} | Date~ ${getNiceDate(now)}` +
+        ` | Steps/Goal~ ${today.adjusted.steps}/${goals.steps}` +
+        ` | Battery~ ${Math.floor(battery.chargeLevel)}% | Charging~ ${charger.connected}` +
+        ` | Pulse~ ${_pulse} | OnWrist~ ${_onwrist}`
+    );
+}
+
+function logDebugSettings() {
+  if (DEBUG_OUTPUT) logDebug('_noxieSettings ~ ' + JSON.stringify(_noxieSettings, undefined, 2));
 }
