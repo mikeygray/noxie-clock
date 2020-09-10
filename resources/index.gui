@@ -1,8 +1,9 @@
 <svg id="screen">
   <image id="background" class="screenFill" href="backgrounds/0.png" />
   <image id="noxie" class="screenFill" href="noxies/noxie-blank.png" />
-  <rect id="headerBackground" />
+  <rect id="dateBackground" />
   <text id="mainDate" class="header" />
+  <circle id="tempBackground" />
   <text id="mainTemp" class="header" />
   <text id="mainClockHours" class="mainClock"/>
   <text id="mainClockColon" class="mainClock"/>

@@ -42,6 +42,7 @@ const elementClockMinutes = document.getElementById('mainClockMinutes');
 const elementClockAmPm = document.getElementById('mainClockAmPm');
 const elementDate = document.getElementById('mainDate');
 const elementTemp = document.getElementById('mainTemp');
+const elementDateBackground = document.getElementById('dateBackground');
 
 const elementStepsIcon = document.getElementById('steps_icon');
 const elementStepsValue = document.getElementById('steps_value');
@@ -231,6 +232,7 @@ function updateTemp() {
 /** update background/overlay */
 function updateBackground() {
   let newBackgroundSet = false;
+  elementDateBackground.style.display = _noxieSettings.showWeather ? 'inline' : 'none';
   if (JSON.parse(_noxieSettings.showWeather) && _noxieSettings.weatherCode.length > 0) {
     //TODO: Why can't I get Array.prototype.find() to work here?
     weatherFrames.forEach((setting) => {
