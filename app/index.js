@@ -78,6 +78,12 @@ messaging.peerSocket.onmessage = function (evt) {
   }
 };
 
+/** when display changes force a clock update */
+display.addEventListener('change', () => {
+  let _today = new Date();
+  updateClock(_today);
+});
+
 /** heart rate */
 if (HeartRateSensor && appbit.permissions.granted('access_heart_rate')) {
   const _hrm = new HeartRateSensor();
@@ -85,7 +91,7 @@ if (HeartRateSensor && appbit.permissions.granted('access_heart_rate')) {
     _pulse = _hrm.heartRate;
   });
   display.addEventListener('change', () => {
-    display.on ? _hrm.start() : _hrm.stop(); // Stop sensor on screen off to conserve battery
+    display.on ? _hrm.start() : _hrm.stop(); // Stop sensor when screen off to conserve battery
   });
   _hrm.start();
 }
