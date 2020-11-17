@@ -1,7 +1,7 @@
 import clock from 'clock';
 import document from 'document';
-import analytics from "fitbit-google-analytics/app"
-import * as fs from "fs";
+import analytics from 'fitbit-google-analytics/app';
+import * as fs from 'fs';
 import * as messaging from 'messaging';
 import { display } from 'display';
 import { me as appbit } from 'appbit';
@@ -15,9 +15,8 @@ import { noxieFrames } from './constants';
 
 /** analytics */
 analytics.configure({
-  tracking_id: "UA-167462733-1",
-  user_language: locale.language
-})
+  tracking_id: 'UA-167462733-1',
+});
 
 /** initial values */
 let _pulse = -1;
@@ -51,14 +50,13 @@ let _noxieSettings = {
   showBattery: true,
   showAnimations: true,
 };
-if (fs.existsSync("/private/data/noxie-settings.txt")) {
-  _noxieSettings = fs.readFileSync("noxie-settings.txt", "json");
+if (fs.existsSync('/private/data/noxie-settings.txt')) {
+  _noxieSettings = fs.readFileSync('noxie-settings.txt', 'json');
 }
 
-
 /** settings messaging */
-messaging.peerSocket.onmessage = function(evt) {
-  updateNoxieSettings(evt.data.key, evt.data.value)
+messaging.peerSocket.onmessage = function (evt) {
+  updateNoxieSettings(evt.data.key, evt.data.value);
   switch (evt.data.key) {
     case 'showSteps':
       elementStepsIcon.style.display = _noxieSettings.showSteps ? 'inline' : 'none';
@@ -187,11 +185,11 @@ function updateAnimations() {
 /** update settings */
 function updateNoxieSettings(_key, _value) {
   _noxieSettings[_key] = _value;
-  fs.writeFileSync("noxie-settings.txt", _noxieSettings, "json");
+  fs.writeFileSync('noxie-settings.txt', _noxieSettings, 'json');
 }
 
 /** main loop */
-clock.ontick = evt => {
+clock.ontick = (evt) => {
   if (display.on) {
     updateClock(evt.date);
     if (_noxieSettings.showPulse) updatePulse();

@@ -1,3 +1,4 @@
+import 'fitbit-google-analytics/companion';
 import { settingsStorage } from 'settings';
 import * as messaging from 'messaging';
 import { me as companion } from 'companion';
@@ -9,7 +10,7 @@ if (!settingsStorage.getItem('showBattery')) settingsStorage.setItem('showBatter
 if (!settingsStorage.getItem('showAnimations')) settingsStorage.setItem('showAnimations', true);
 
 // send starting values
-messaging.peerSocket.onopen = function() {
+messaging.peerSocket.onopen = function () {
   sendValue('showSteps', settingsStorage.getItem('showSteps'));
   sendValue('showPulse', settingsStorage.getItem('showPulse'));
   sendValue('showBattery', settingsStorage.getItem('showBattery'));
@@ -17,7 +18,7 @@ messaging.peerSocket.onopen = function() {
 };
 
 // settings have been changed
-settingsStorage.onchange = function(evt) {
+settingsStorage.onchange = function (evt) {
   sendValue(evt.key, evt.newValue);
 };
 
