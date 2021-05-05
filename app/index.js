@@ -200,11 +200,9 @@ clock.ontick = (evt) => {
     updateClock(evt.date);
     if (_noxieSettings.showPulse) updatePulse();
     if (_noxieSettings.showAnimations) updateAnimations();
-    if (evt.date.getSeconds() % 5 === 0) {
-      if (_noxieSettings.showSteps) updateSteps();
-      if (_noxieSettings.showBattery) updateBattery();
-      //logDebug(evt.date);
-    }
+    if (_noxieSettings.showSteps) updateSteps();
+    if (_noxieSettings.showBattery) updateBattery();
+    //logDebug(evt.date);
   }
 };
 
