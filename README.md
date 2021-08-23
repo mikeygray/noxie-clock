@@ -5,8 +5,9 @@
 A simple fitbit watch face, in honor of my cat Noxie. 😺
 
 It supports 12 hour and 24 hour digital displays, step counter, current heart rate and battery level
-(with charging icon). It also gathers weather data from [openweather](https://openweathermap.org)
-and updates the background accordingly, though this is a work in progress. All of these can be
+(with charging icon). It was planned to gather weather data from [openweather](https://openweathermap.org)
+and update the background accordingly, though this is probably never going to roll out due to API restrictions
+(see [this branch](https://github.com/mikeygray/noxie-clock/tree/feature/2-noxie-weather)). All features can be
 switched on and off with settings in the FitBit mobile app.
 
 Please feel free to fork, but credit is always nice.
